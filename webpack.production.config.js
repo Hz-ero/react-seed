@@ -18,31 +18,50 @@ module.exports = {
     rules: [
       {
         test: /\.css$/,
-        use: [ 'style-loader', 'css-loader' ]
+        use: [
+          { loader: "style-loader" },
+          {
+            loader: "css-loader",
+            options: {
+              module: true,
+              localIdentName: '[local]--[hash:base64:5]'
+            }
+          }
+        ]
       },
-      { 
-        test: /\.js[x]?$/, 
-        include: path.resolve(__dirname, 'src'), 
-        exclude: /node_modules/, 
-        loader: 'babel-loader',
-        query: {
-          presets: ['es2015', 'react'],
-          plugins: [
-            ['import', [{ libraryName: "antd", style: true }]],
-          ]
-        } 
+      {
+        test: /\.js[x]?$/,
+        include: path.resolve(__dirname, 'src'),
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['es2015', 'react', 'stage-0'],
+            plugins: [
+              ['import', [{ libraryName: "antd", style: true }]],
+            ]
+          }
+        }
       },
       {
         test: /\.less$/,
         use: [
-          'style-loader',
+          { loader: 'style-loader' },
           { loader: 'css-loader', options: { importLoaders: 1 } },
-          'less-loader'
+          { loader: 'less-loader' }
         ]
       },
-      { 
-        test: /\.(png|jpg)$/, 
-        loader: 'url-loader?limit=8192' }
+      {
+        test: /\.(png|jpg|gif)$/,
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8192
+            }
+          }
+        ]
+      }
     ]
   },
   resolve: {
